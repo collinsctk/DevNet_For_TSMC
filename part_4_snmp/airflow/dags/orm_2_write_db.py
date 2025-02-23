@@ -8,7 +8,7 @@
 
 
 import time
-from snmp_v2_3_get_all_ce import snmpv2_get_all
+from snmp_v3_3_get_all import snmpv3_get_all
 from sqlalchemy.orm import sessionmaker
 from orm_1_create_table import RouterMonitor, engine
 from datetime import timezone, timedelta, datetime
@@ -16,14 +16,16 @@ from datetime import timezone, timedelta, datetime
 Session = sessionmaker(bind=engine)
 session = Session()
 
-ip_address = "10.1.1.254"
-community = "Qytang.com"
+ip_address = "196.21.5.211"
+username = "qytanguser"
+auth_key = 'Cisc0123'
+priv_key = 'Cisc0123'
 
 gmt_8 = timezone(timedelta(hours=8))
 
 
-def get_info_writedb(ip, rocommunity):
-    get_all_dict = snmpv2_get_all(ip, rocommunity)
+def get_info_writedb(ip_address, username, auth_key, priv_key):
+    get_all_dict = snmpv3_get_all(ip_address, username, auth_key, priv_key)
     get_all_dict.pop('hostname')
     get_all_dict.pop('interface_list')
     update_record_time = datetime.now().astimezone(gmt_8)

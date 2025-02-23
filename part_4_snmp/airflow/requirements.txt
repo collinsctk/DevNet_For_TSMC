@@ -2,6 +2,7 @@ pynetbox==7.4.1
 requests==2.32.3
 pendulum
 sqlalchemy
-psycopg2-binary
-pyasn1==0.4.8
-pysnmp==4.4.12
+psycopg2-binary==2.9.10
+pyasn1==0.6.1
+pysnmp==7.1.16
+

@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, orm
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Float
 
 
-engine = create_engine('postgresql+psycopg2://qytangdbuser:Cisc0123@10.1.1.101/qytangdb',
+engine = create_engine('postgresql+psycopg2://qytangdbuser:Cisc0123@196.21.5.218/qytangdb',
                        connect_args={"options": "-c timezone=Asia/Chongqing"})
 
 Base = orm.declarative_base()

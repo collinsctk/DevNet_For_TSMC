@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from orm_2_write_db import get_info_writedb, ip_address, community
+from orm_2_write_db import get_info_writedb, ip_address, username, auth_key, priv_key
 from qyt_send_mail import qyt_smtp_attachment
 import pendulum
 
@@ -39,8 +39,11 @@ with DAG(
     run_my_script = PythonOperator(
         task_id='GET_SNMP_INFO_WriteDB',  # 不能使用中文,空格也不行
         python_callable=get_info_writedb,  # 执行的函数
-        op_kwargs={'ip': ip_address,
-                   'rocommunity': community},  # 关键字参数字典
+        op_kwargs={'ip_address': ip_address,
+                   'username': username,
+                   'auth_key': auth_key,
+                   'priv_key': priv_key
+                   },  # 关键字参数字典
     )
 
 # [root@AIOps dags]# docker compose restart airflow-webserver airflow-scheduler
