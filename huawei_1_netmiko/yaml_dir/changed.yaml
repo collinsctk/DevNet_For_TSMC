@@ -1,0 +1,29 @@
+device_ip: 10.1.1.251
+device_type: huawei
+username: qytang
+password: Huawei@123
+configs:
+-   config_direction: ospf
+    config_data:
+        process_id: 1
+        router_id: 3.3.3.3
+        area_list:
+        -   area_id: 0.0.0.0
+            area_network_list:
+            -   network: 10.1.1.0
+                wildcard_mask: 0.0.0.255
+-   config_direction: users
+    config_data:
+        users:
+        -   username: qytang-user1
+            password: Cisc0123
+            priv: 3
+            services:
+            - telnet
+            - ssh
+        -   username: qytang-user2
+            password: Huawei@123
+            priv: 3
+            services:
+            - telnet
+            - ssh

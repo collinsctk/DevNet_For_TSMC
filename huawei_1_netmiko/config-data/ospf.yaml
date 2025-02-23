@@ -1,0 +1,9 @@
+process_id: 1
+router_id: 3.3.3.3
+area_list:
+  - area_id: 0.0.0.0
+    area_network_list:
+      - network: 10.1.1.0
+        wildcard_mask: 0.0.0.255
+      - network: 10.1.2.0
+        wildcard_mask: 0.0.0.255

@@ -1,0 +1,10 @@
+ospf {{ process_id }} router-id {{ router_id }}
+{% for a in area_list %}
+    area {{ a.area_id }}
+    {% for n in a.area_network_list %}
+        network {{ n.network }} {{ n.wildcard_mask }}
+    {% endfor %}
+{% endfor %}
+{# CE 要加commit #}
+commit
+

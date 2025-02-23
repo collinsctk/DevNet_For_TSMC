@@ -1,0 +1,17 @@
+- username: qytang-user11
+  password: Huawei@123
+  priv: 3
+  services:
+    - telnet
+    - ssh
+- username: qytang-user12
+  password: Huawei@123
+  priv: 3
+  services:
+    - http
+    - ssh
+- username: qytang-user13
+  password: Huawei@123
+  priv: 3
+  services:
+    - ssh

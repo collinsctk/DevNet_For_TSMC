@@ -1,0 +1,10 @@
+Template, Hostname, Vendor, Command
+huawei_display_ip_interface_brief.template, .*, huawei_vrp, dis[[play]] ip int[[erfaces]] b[[rief]]
+# --------------AR用-------------
+# huawei_display_version.template, .*, huawei_vrp, dis[[play]] ve[[rsion]]
+# --------------CE用-------------
+huawei_ce_display_version.template, .*, huawei_vrp, dis[[play]] ve[[rsion]]
+
+huawei_ce_display_current_users.template, .*, huawei_vrp, dis[[play]] cu[[rrent-configuration]] \| in user
+
+huawei_ce_display_interface.template, .*, huawei_vrp, dis[[play]] int[[erface]]

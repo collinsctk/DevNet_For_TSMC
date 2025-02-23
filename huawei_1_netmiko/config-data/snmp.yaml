@@ -1,0 +1,9 @@
+acl_config:
+  acl_number: 2001
+  rules:
+    - rule_id: 1
+      network: 10.1.1.0
+      wildcard_mask: 0.0.0.255
+snmp_community: Qytang.com
+mib_view: qytmib
+mib_incloude: internet

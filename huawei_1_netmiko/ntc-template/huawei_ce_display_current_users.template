@@ -1,0 +1,9 @@
+Value USERNAME (\S+)
+Value PASSWORD (\$1c\$[^\s]+)
+Value LEVEL (\d+)
+Value SERVICES (.*)
+
+Start
+  ^\s+local-user ${USERNAME} password irreversible-cipher ${PASSWORD} -> Continue
+  ^\s+local-user ${USERNAME} service-type ${SERVICES} -> Continue
+  ^\s+local-user ${USERNAME} level ${LEVEL} -> Record
