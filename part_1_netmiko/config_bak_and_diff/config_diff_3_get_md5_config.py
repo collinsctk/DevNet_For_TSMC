@@ -18,10 +18,10 @@ def get_md5_config(host, username, password):
         device_config_raw = netmiko_show_cred(host,
                                               username,
                                               password,
-                                              'display current-configuration',
-                                              device_type='huawei')
+                                              'show run',
+                                              device_type='cisco_ios')
         # print(device_config_raw)
-        split_result = re.split(r'\nsysname \S+\n', device_config_raw)
+        split_result = re.split(r'\nhostname \S+\n', device_config_raw)
         run_config = device_config_raw.replace(split_result[0], '').strip()
         # 计算MD5值
         m = hashlib.md5()
@@ -36,7 +36,7 @@ def get_md5_config(host, username, password):
 
 if __name__ == '__main__':
     from sqlalchemy.orm import sessionmaker
-    from huawei_1_netmiko.config_bak_and_diff.config_diff_1_create_table import RouterConfig, db_file_path
+    from part_1_netmiko.config_bak_and_diff.config_diff_1_create_table import RouterConfig, db_file_path
     from sqlalchemy import create_engine
 
     engine = create_engine(f'sqlite:///{db_file_path}?check_same_thread=False',
