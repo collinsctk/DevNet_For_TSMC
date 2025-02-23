@@ -1,87 +1,92 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding=utf-8 -*-
+# 本脚由亁颐堂现任明教教主编写，用于亁颐堂NetDevOps课程！
+# 教主QQ:605658506
+# 亁颐堂官网www.qytang.com
+# 教主VIP, 让我们聊点高级的
+# https://vip.qytang.com/
 
-from pysnmp.entity.rfc3413.oneliner import cmdgen
+# ~~~~~~~~~~~~~~~~注意版本~~~~~~~~~~~~~
+# pyasn1==0.6.1    # ~~~更新时间2025/2/23
+# pysnmp==7.1.16   # ~~~更新时间2025/2/23
+
+import asyncio
+from pysnmp.hlapi.v3arch.asyncio import *
 
 
-def snmpv3_getbulk(ip,
-                   user,
-                   auth_key,
-                   priv_key,
-                   oid,
-                   auth_protocol=cmdgen.usmHMACSHAAuthProtocol,  # 使用SHA认证算法
-                   priv_protocol=cmdgen.usmAesCfb128Protocol,    # 使用AES-128加密算法
-                   port=161,
-                   non_repeat=0,
-                   max_repeat=10):
-    """
-    使用SNMPv3执行GetBulk请求（仅支持单个OID）。
-    返回结果为列表，格式为[(oid, value), (oid, value), ...]。
-    """
-
-    cmdGen = cmdgen.CommandGenerator()
-
-    # SNMPv3的用户数据：用户名、认证密钥、加密密钥
-    # 根据需要修改auth_protocol和priv_protocol（例如usmHMACMD5AuthProtocol, usmDESPrivProtocol等）
-    errorIndication, errorStatus, errorIndex, varBindTable = cmdGen.bulkCmd(
-        cmdgen.UsmUserData(
-            userName=user,
-            authKey=auth_key,
-            privKey=priv_key,
-            authProtocol=auth_protocol,
-            privProtocol=priv_protocol
+# 异步 SNMPv3 GETBULK 请求
+async def snmpv3_getbulk(ip, username, auth_key, priv_key, oid, count=25, auth_protocol=usmHMACSHAAuthProtocol,
+                         priv_protocol=usmAesCfb128Protocol, port=161):
+    # 使用 bulk_cmd 执行 SNMPv3 GETBULK 操作
+    iterator = bulk_cmd(
+        SnmpEngine(),
+        UsmUserData(
+            username,  # 用户名
+            auth_key,  # 认证密钥
+            priv_key,  # 加密密钥
+            authProtocol=auth_protocol,  # 认证协议
+            privProtocol=priv_protocol  # 加密协议
         ),
-        cmdgen.UdpTransportTarget((ip, port)),
-        non_repeat,
-        max_repeat,
-        oid
+        await UdpTransportTarget.create((ip, port)),  # 配置目的地址和端口号
+        ContextData(),
+        0, count,  # non-repeaters 和 max-repetitions
+        ObjectType(ObjectIdentity(oid)),  # OID
+        lexicographicMode=True
     )
 
-    if errorIndication:
-        print("获取失败:", errorIndication)
-        return []
-    elif errorStatus:
-        print("SNMP错误: %s at %s" % (errorStatus.prettyPrint(),
-                                  errorIndex and varBindTable[int(errorIndex)-1][0] or '?'))
-        return []
+    # 获取结果
+    error_indication, error_status, error_index, var_binds = await iterator
 
-    result = []
-    # 按行解析返回结果的表格
-    for varBindTableRow in varBindTable:
-        for name, val in varBindTableRow:
-            str_name = str(name)
-            # 检查返回的OID是否仍在请求的OID子树下，如果超出子树，直接返回
-            if not str_name.startswith(oid):
-                return result
-            result.append((str_name, str(val)))
-
-    return result
+    # 错误处理
+    if error_indication:
+        print(f"读取错误!!!\n{error_indication}")
+    elif error_status:
+        print(f"读取错误!!!\n{error_status} at {error_index and var_binds[int(error_index) - 1][0] or '?'}")
+    else:
+        # 处理返回的 varBinds
+        result = []
+        for var_bind_table_row in var_binds:
+            get_oid = str(var_bind_table_row[0])
+            get_value = str(var_bind_table_row[1])
+            if oid not in get_oid:  # 超过OID范围跳出循环
+                break
+            result.append((get_oid, get_value))
+        return result
 
 
 if __name__ == "__main__":
-    ip_address = "10.1.1.254"
-    snmp_user = 'qytanguser'
-    auth_key = 'Qytang.com'
-    priv_key = 'Qytang.com'
+    # SNMPv3 配置
+    ip_address = "196.21.5.211"
+    username = "qytanguser"
+    auth_key = 'Cisc0123'
+    priv_key = 'Cisc0123'
 
-    # 示例OID（接口描述）
-    # snmp_oid = "1.3.6.1.2.1.2.2.1.2"  # 接口描述
-    # snmp_oid = "1.3.6.1.2.1.2.2.1.5"  # 接口速率
-    # snmp_oid = "1.3.6.1.2.1.2.2.1.10" # 进接口字节数
-    snmp_oid = "1.3.6.1.2.1.2.2.1.16" # 出接口字节数
-    raw_name_list = snmpv3_getbulk(
-        ip_address,
-        snmp_user,
-        auth_key,
-        priv_key,
-        snmp_oid,
-        auth_protocol=cmdgen.usmHMACSHAAuthProtocol,
-        priv_protocol=cmdgen.usmAesCfb128Protocol,
-        non_repeat=0,
-        max_repeat=10
-    )
+    # 获取接口名称
+    raw_name_list = asyncio.run(snmpv3_getbulk(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.2", port=161))
+    if_name_list = [raw_if_name[1] for raw_if_name in raw_name_list]
 
-    if_name_list = [val for _, val in raw_name_list]
+    # 获取接口速率
+    raw_speed_list = asyncio.run(snmpv3_getbulk(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.5", port=161))
+    if_speed_list = [raw_speed[1] for raw_speed in raw_speed_list]
 
-    # 这里你可以像在v2中那样进一步处理数据，比如再获取ifSpeed, ifInOctets, ifOutOctets等，并组合
-    print(if_name_list)
+    # 获取进接口字节数
+    raw_in_bytes_list = asyncio.run(snmpv3_getbulk(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.10", port=161))
+    if_in_bytes_list = [raw_in_bytes[1] for raw_in_bytes in raw_in_bytes_list]
+
+    # 获取出接口字节数
+    raw_out_bytes_list = asyncio.run(snmpv3_getbulk(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.16", port=161))
+    if_out_bytes_list = [raw_out_bytes[1] for raw_out_bytes in raw_out_bytes_list]
+
+    # 汇总接口信息
+    interface_list = []
+    for name, speed, in_bytes, out_bytes in zip(if_name_list, if_speed_list, if_in_bytes_list, if_out_bytes_list):
+        interface_list.append({
+            'interface_name': name,
+            'interface_speed': speed,
+            'in_bytes': in_bytes,
+            'out_bytes': out_bytes
+        })
+
+    # 打印接口信息
+    from pprint import pprint
+    pprint(interface_list)
