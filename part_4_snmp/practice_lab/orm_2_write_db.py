@@ -20,7 +20,7 @@ sys.path.insert(1, current_dir)
 parent_dir = current_file_path.parent.parent
 sys.path.insert(1, f'{parent_dir}{os.sep}python_script')
 
-from snmp_v2_4_get_all_ce import snmpv2_get_all
+from snmp_v3_4_get_all import snmpv3_get_all
 from sqlalchemy.orm import sessionmaker
 from orm_1_create_table import RouterMonitor, db_filename
 from sqlalchemy import create_engine
@@ -34,8 +34,8 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-def get_info_writedb(ip, rocommunity):
-    get_all_dict = snmpv2_get_all(ip, rocommunity)
+def get_info_writedb(ip_address, username, auth_key, priv_key):
+    get_all_dict = snmpv3_get_all(ip_address, username, auth_key, priv_key)
 
     get_all_dict.pop('hostname')
     get_all_dict.pop('interface_list')
@@ -46,9 +46,11 @@ def get_info_writedb(ip, rocommunity):
 
 if __name__ == '__main__':
     # ip地址与snmp community字符串
-    ip_address = "10.1.1.254"
-    community = "Qytang.com"
+    ip_address = "196.21.5.211"
+    username = "qytanguser"
+    auth_key = 'Cisc0123'
+    priv_key = 'Cisc0123'
 
-    get_info_writedb(ip_address, community)
+    get_info_writedb(ip_address, username, auth_key, priv_key)
 
 

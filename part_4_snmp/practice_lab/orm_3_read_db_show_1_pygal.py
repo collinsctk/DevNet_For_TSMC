@@ -7,9 +7,9 @@
 # https://vip.qytang.com/
 
 from sqlalchemy.orm import sessionmaker
-from huawei_3_snmp.practice_lab.orm_1_create_table import RouterMonitor, db_filename
+from part_4_snmp.practice_lab.orm_1_create_table import RouterMonitor, db_filename
 # airflow 调度写入的PSQL数据库
-from huawei_3_snmp.airflow.dags.orm_1_create_table import engine
+from part_4_snmp.airflow.dags.orm_1_create_table import engine
 import pygal  # 引入 Pygal
 from pygal.style import Style
 from sqlalchemy import create_engine

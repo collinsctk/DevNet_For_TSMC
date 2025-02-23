@@ -7,14 +7,14 @@
 # https://vip.qytang.com/
 
 from sqlalchemy.orm import sessionmaker
-from huawei_3_snmp.practice_lab.orm_1_create_table import RouterMonitor, db_filename
+from part_4_snmp.practice_lab.orm_1_create_table import RouterMonitor, db_filename
 from sqlalchemy import create_engine
 from datetime import datetime, timedelta
 from bokeh.plotting import figure, output_file, save
 from bokeh.models import DatetimeTickFormatter, HoverTool
 import numpy as np
 # airflow 调度写入的PSQL数据库
-from huawei_3_snmp.airflow.dags.orm_1_create_table import engine
+# from part_4_snmp.airflow.dags.orm_1_create_table import engine
 from scipy.interpolate import make_interp_spline
 import pytz
 import os

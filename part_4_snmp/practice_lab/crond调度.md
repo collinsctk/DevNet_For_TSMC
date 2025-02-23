@@ -1,6 +1,6 @@
 ### 测试代码
 ```shell
-[root@QYTRocky ~]# /usr/bin/python3.11 /NetDevOps_Huawei/huawei_3_snmp/practice_lab/orm_2_write_db.py
+[root@QYTRocky ~]# /root/.virtualenvs/DevNet_For_TSMC/bin/python3.11 /DevNet_For_TSMC/part_4_snmp/practice_lab/orm_2_write_db.py
 ```
 
 ### crond调度
@@ -19,8 +19,7 @@ MAILTO=root
 # |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
 # |  |  |  |  |
 # *  *  *  *  * user-name  command to be executed
-# * * * * * root /usr/bin/python3.11 /NetDevOps_Huawei_Homework/day_4_backup_config_crond/day_4_2_backup_config.py
-* * * * * root /usr/bin/python3.11 /NetDevOps_Huawei/huawei_3_snmp/practice_lab/orm_2_write_db.py
+* * * * * root /root/.virtualenvs/DevNet_For_TSMC/bin/python3.11 /DevNet_For_TSMC/part_4_snmp/practice_lab/orm_2_write_db.py
 
 ```
 

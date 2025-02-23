@@ -7,8 +7,8 @@
 # https://vip.qytang.com/
 
 import asyncio
-from part_4_snmp.python_script.snmp_v3_1_get import snmpv3_get
-from part_4_snmp.python_script.snmp_v3_3_getbulk import snmpv3_getbulk
+from snmp_v3_1_get import snmpv3_get
+from snmp_v3_3_getbulk import snmpv3_getbulk
 
 # ~~~~~~~~~~~~~~~~注意版本~~~~~~~~~~~~~
 # pyasn1==0.6.1    # ~~~更新时间2025/2/23
