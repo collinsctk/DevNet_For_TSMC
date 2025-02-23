@@ -1,8 +1,7 @@
-hvac==0.10.6
-nornir==3.0.0
-nornir-jinja2==0.1.1
-nornir-netmiko==0.1.1
-nornir-utils==0.1.1
-cffi>=1.12
-markupsafe==2.0.1
-cryptography==36.0.2
+hvac==2.3.0
+nornir==3.5.0
+nornir-jinja2==0.2.0
+nornir-netmiko==1.0.1
+nornir-utils==0.2.0
+cffi==1.17.1
+cryptography==44.0.1

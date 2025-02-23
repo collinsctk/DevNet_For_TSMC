@@ -6,10 +6,10 @@
 # 教主VIP, 让我们聊点高级的
 # https://vip.qytang.com/
 
-# -----下面是解决win报错问题------
-# ------Linux下视乎没有问题------
-# pyasn1==0.4.8
-# pysnmp==4.4.12 现在是最新的7.1.16
+# ~~~~~~~~~~~~~~~~注意版本~~~~~~~~~~~~~
+# pyasn1==0.6.1    # ~~~更新时间2025/2/23
+# pysnmp==7.1.16   # ~~~更新时间2025/2/23
+
 import asyncio
 from pysnmp.hlapi.v3arch.asyncio import *
 
@@ -30,17 +30,34 @@ async def snmpv2_get(ip, community, oid, port=161):
     elif error_status:
         print(f'{error_status} at {error_index and var_binds[int(error_index) - 1][0] or "?"}')
     else:
-        # 如果返回结果有多行，需要拼接后返回
-        result_str = "".join([varBind.prettyPrint() for varBind in var_binds])
-        # 返回的为一个元组，OID 与字符串结果
-        return result_str.split("=")[0].strip(), result_str.split("=")[1].strip()
+        # 获取返回的第一个 varBind
+        var_bind = var_binds[0]
+        # 获取其值并解码为 UTF-8 字符串
+        value = var_bind[1]
+        if isinstance(value, bytes):
+            # 将十六进制的字节串转换为字符串
+            result_str = bytes.fromhex(value[2:].decode('utf-8')).decode('utf-8', errors='ignore')
+        else:
+            result_str = str(value)
+        # 返回 OID 和解码后的字符串结果
+        return var_bind[0].prettyPrint(), result_str
 
 if __name__ == "__main__":
     # ip 地址与 snmp community 字符串
     ip_address = "196.21.5.211"
     community = "qytangro"
 
-    # 使用 asyncio 运行异步函数
-    result = asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.2.1.1.1.0", port=161))
-    if result:
-        print(result)
+    # 系统描述
+    print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.2.1.1.1.0", port=161)))
+    # 联系人
+    print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.2.1.1.4.0", port=161)))
+    # # 主机名
+    print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.2.1.1.5.0", port=161)))
+    # 地点
+    print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.2.1.1.6.0", port=161)))
+    # cpmCPUTotal5sec
+    print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.6.7", port=161)))
+    # cpmCPUMemoryUsed
+    print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.12.7", port=161)))
+    # cpmCPUMemoryFree
+    print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.4.1.9.9.109.1.1.1.1.13.7", port=161)))
