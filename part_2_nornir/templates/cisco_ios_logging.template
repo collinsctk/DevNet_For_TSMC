@@ -1,0 +1,4 @@
+logging trap {{ host.logging_trap_level }}
+{% for log_dst in host.logging_host_list %}
+    logging host {{ log_dst }}
+{% endfor %}

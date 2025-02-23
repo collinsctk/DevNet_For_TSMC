@@ -1,0 +1,7 @@
+{% if host.logging_enable %}
+    logging enable
+    logging trap {{ host.logging_trap }}
+    {% for i in host.logging_host_list %}
+        logging host {{ i.output_if }} {{ i.syslog_server }}
+    {% endfor %}
+{% endif %}

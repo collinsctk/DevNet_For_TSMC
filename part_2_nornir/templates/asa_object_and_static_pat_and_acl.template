@@ -1,0 +1,9 @@
+{% for i in host.object_list %}
+    object {{ i.obj_type }} {{ i.name }}
+        {{ i.network_type }} {{ i.network_value }}
+        {% if i.nated_address %}
+            nat ({{ i.src_if }},{{ i.dst_if }}) static {{ i.nated_address }} service {{ i.protocol }} {{ i.src_port }} {{ i.dst_port }}
+            access-list outside_control extended permit {{ i.protocol }} any object {{ i.name }} eq {{ i.src_port }}
+        {% endif %}
+{% endfor %}
+access-group outside_control in interface Outside

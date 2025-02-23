@@ -1,0 +1,4 @@
+snmp-server location {{ host.snmp_location }}
+snmp-server contact {{ host.snmp_contact }}
+snmp-server community {{ host.snmp_ro_community }} RO
+snmp-server community {{ host.snmp_rw_community }} RW

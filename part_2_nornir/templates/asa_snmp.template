@@ -1,0 +1,6 @@
+snmp-server location {{ host.snmp_location }}
+snmp-server contact {{ host.snmp_contact }}
+snmp-server community {{ host.snmp_ro_community }}
+{% for i in host.snmp_server_list %}
+    snmp-server host {{ i.output_if }} {{ i.snmp_server }} community {{ i.community }} version {{ i.version }}
+{% endfor %}

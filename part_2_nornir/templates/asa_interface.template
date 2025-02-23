@@ -1,0 +1,7 @@
+{% for i in host.interface_list %}
+    interface {{ i.interface_name }}
+          ip address {{ i.ipaddr }} {{ i.netmask }}
+          nameif {{ i.nameif }}
+          security-level {{ i.security_lvl }}
+          no shutdown
+{% endfor %}
