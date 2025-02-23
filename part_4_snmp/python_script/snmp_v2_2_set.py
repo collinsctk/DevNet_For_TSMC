@@ -6,6 +6,10 @@
 # 教主VIP, 让我们聊点高级的
 # https://vip.qytang.com/
 
+# ~~~~~~~~~~~~~~~~注意版本~~~~~~~~~~~~~
+# pyasn1==0.6.1    # ~~~更新时间2025/2/23
+# pysnmp==7.1.16   # ~~~更新时间2025/2/23
+
 import asyncio
 from pysnmp.hlapi.v3arch.asyncio import *
 from snmp_v2_3_getbulk import snmpv2_getbulk
