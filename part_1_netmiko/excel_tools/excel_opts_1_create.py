@@ -28,31 +28,23 @@ def excel_create(yaml_file):
         data = yaml.safe_load(f.read())
     # pprint(data)
     """
-    [{'password': 'Huawei@123',
-      'priv': 3,
-      'services': ['telnet', 'ssh'],
-      'username': 'qytang-user11'},
-     {'password': 'Huawei@123',
-      'priv': 3,
-      'services': ['http', 'ssh'],
-      'username': 'qytang-user12'},
-     {'password': 'Huawei@123',
-      'priv': 3,
-      'services': ['ssh'],
-      'username': 'qytang-user13'}]
+    [{'password': 'Cisc0123', 'priv': 15, 'username': 'qytuser11'},
+     {'password': 'Cisc0123', 'priv': 15, 'username': 'qytuser12'},
+     {'password': 'Cisc0123', 'priv': 15, 'username': 'qytuser13'}]
     """
     # 创建 DataFrame
     df = pd.DataFrame(data)
     # print(df)
     """
-            username    password  priv       services
-    0  qytang-user11  Huawei@123     3  [telnet, ssh]
-    1  qytang-user12  Huawei@123     3    [http, ssh]
-    2  qytang-user13  Huawei@123     3          [ssh]
+        username  password  priv
+    0  qytuser11  Cisc0123    15
+    1  qytuser12  Cisc0123    15
+    2  qytuser13  Cisc0123    15
     """
-    # 将 'services' 列中的列表"转换"为以空格分隔的字符串
-    # [telnet, ssh] ---> "telnet ssh"
-    df['services'] = df['services'].apply(lambda x: ' '.join(x))
+    # ~~~~~~~~~这是华为的操作，拼接service~~~~~~~~~
+    # # 将 'services' 列中的列表"转换"为以空格分隔的字符串
+    # # [telnet, ssh] ---> "telnet ssh"
+    # df['services'] = df['services'].apply(lambda x: ' '.join(x))
 
     # 创建并写入 Excel 文件
     df.to_excel(excel_file_path, index=False)

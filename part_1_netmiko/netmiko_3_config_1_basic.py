@@ -48,6 +48,7 @@ def config_cmd_list(config_direction_name):
         with open(f'{config_template_dir}{os.sep}{template_file_name}') as template_f:
             template = Template(template_f.read())
             config_str = template.render(data)
+            # if line.strip() 确认strip后不为空
             return [line.strip() for line in config_str.split('\n') if line.strip()]
 
 

@@ -23,6 +23,9 @@ def excel_insert(excel_file):
     # 读取 Excel 文件
     df = pd.read_excel(excel_file)
 
+    # # 挑取特定的列来产生字典 ~~~下面的操作是选取全部列~~~~
+    # df_selected = df[['username', 'priv']]
+
     # 转换DataFrame的每一行到字典
     # orient='records'表示每个字典代表一行，键是列名
     list_of_dicts = df.to_dict(orient='records')

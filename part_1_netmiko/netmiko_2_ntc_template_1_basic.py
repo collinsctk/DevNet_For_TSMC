@@ -67,8 +67,8 @@ if __name__ == "__main__":
                                 username,
                                 password,
                                 # 'show version',
-                                # 'show ip interface brief',
-                                "show running-config | include username",
+                                'show ip interface brief',
+                                # "show running-config | include username",
                                 # 'show interfaces',
                                 'cisco_ios'
                                 )
