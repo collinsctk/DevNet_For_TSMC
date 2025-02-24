@@ -4,7 +4,7 @@ from part_1_netmiko.netmiko_2_ntc_template_1_basic import clitable_to_dict
 from textfsm import clitable
 import yaml
 from pprint import pprint
-
+from ntc_templates.parse import parse_output
 
 # 协程相关
 import asyncio
@@ -18,15 +18,28 @@ asyncio.set_event_loop(loop)
 
 async def async_netmiko_ntc_template(ip, username, password, cmd, device_type, ssh_port=22):
 
-    ssh_ouput = netmiko_show_cred(ip, username, password, cmd, device_type, ssh_port=ssh_port)
+    ssh_output = netmiko_show_cred(ip, username, password, cmd, device_type, ssh_port=ssh_port)
 
     cli_table = clitable.CliTable('index', f'.{os.sep}ntc-template')
 
     attributes = {'Command': cmd, 'Vendor': device_type}
 
-    cli_table.ParseCmd(ssh_ouput, attributes)
+    try:
+        # 尝试使用自定义模板解析
+        cli_table.ParseCmd(ssh_output, attributes)
+        parse_result = clitable_to_dict(cli_table)
+    except Exception as e:
+        # 如果自定义模板失败，尝试系统的ntc-template解析
+        try:
+            parse_result = parse_output(platform=device_type,
+                                        command=cmd,
+                                        data=ssh_output)
+            if not parse_result:
+                parse_result = ssh_output
+        # 如果既然失败，直接返回ssh输出的原始内容
+        except Exception as e:
+            return ssh_output
 
-    parse_result = clitable_to_dict(cli_table)
     return {'device_ip': ip,
             'display_cmd': cmd,
             'display_result': parse_result}
