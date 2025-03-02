@@ -5,6 +5,7 @@ client = OpenAI(api_key="ollama",
 
 # openai_model = "qwen2.5:14b"
 openai_model = "phi4:latest"
+# openai_model = "deepseek-r1:32b"
 
 
 def ai_diff(diff_config):
