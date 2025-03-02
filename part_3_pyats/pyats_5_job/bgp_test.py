@@ -39,7 +39,7 @@ class BGPNeighborsEstablished(aetest.Testcase):
     """BGP邻居建立状态测试"""
 
     @aetest.setup
-    def setup(self, testbed):
+    def setup(self):
         """从测试设备中获取并保存BGP详细信息"""
         log.info("正在加载testbed对象")
         testbed = self.parent.parameters['testbed']
@@ -134,7 +134,7 @@ class BGPRouteCheck(aetest.Testcase):
     """BGP邻居建立状态测试"""
 
     @aetest.setup
-    def setup(self, testbed):
+    def setup(self):
         """从测试设备中获取并保存BGP详细信息"""
         log.info("正在加载testbed对象")
         testbed = self.parent.parameters['testbed']
@@ -211,17 +211,7 @@ class CommonCleanup(aetest.CommonCleanup):
     @aetest.subsection
     def disconnect(self, testbed):
         """断开所有设备连接"""
-        # 确保testbed是对象而不是字符串
-        if not isinstance(testbed, Testbed):
-            try:
-                # 尝试从父参数中获取testbed对象
-                testbed = self.parent.parameters.get('testbed')
-                if not isinstance(testbed, Testbed):
-                    log.info("Testbed不是一个对象，可能是因为前面的测试失败")
-                    return
-            except:
-                log.info("无法获取testbed对象，跳过断开连接")
-                return
+        testbed = self.parent.parameters.get('testbed')
 
         for device in testbed:
             log.info(f"断开设备 {device.name}")
