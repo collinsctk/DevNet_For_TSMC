@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from orm_2_write_db import get_info_writedb, ip_address, username, auth_key, priv_key
+from config_diff_3_get_md5_config import config_diff_and_notification
 from qyt_send_mail import qyt_smtp_attachment
 import pendulum
 
@@ -21,9 +21,9 @@ default_args = {
 }
 
 with DAG(
-    'run_get_netbox_device_type_info_dag',  # DAG的名称
+    'config_bak_and_diff_notification_dag',  # DAG的名称
     default_args=default_args,
-    schedule_interval=timedelta(seconds=30),  # 设置为每 30 秒调度一次
+    # schedule_interval=timedelta(seconds=10),  # 设置为每 30 秒调度一次
     # ~~~~~~~~~~~~~~~ crontabs ~~~~~~~
                      # .---------------- minute (0 - 59)
                      # |  .------------- hour (0 - 23)
@@ -34,16 +34,12 @@ with DAG(
                      # *  *  *  *  * user-name  command to be executed
     # schedule_interval='0  2  *  *  1',  # 每周一凌晨2点执行
     # schedule_interval='0  3  1  *  *',  # 每月1号凌晨3点执行
+    schedule_interval='*  *  *  *  *',  # 每一分钟执行一次
     catchup=False,
 ) as dag:
     run_my_script = PythonOperator(
-        task_id='GET_SNMP_INFO_WriteDB',  # 不能使用中文,空格也不行
-        python_callable=get_info_writedb,  # 执行的函数
-        op_kwargs={'ip_address': ip_address,
-                   'username': username,
-                   'auth_key': auth_key,
-                   'priv_key': priv_key
-                   },  # 关键字参数字典
+        task_id='Config_BAK_and_Diff_Notification',  # 不能使用中文,空格也不行
+        python_callable=config_diff_and_notification,  # 执行的函数
     )
 
 # [root@AIOps dags]# docker compose restart airflow-webserver airflow-scheduler
