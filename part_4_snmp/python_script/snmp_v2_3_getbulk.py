@@ -14,6 +14,7 @@ import asyncio
 from pysnmp.hlapi.v3arch.asyncio import *
 
 
+# SNMP GETBULK 操作
 async def snmpv2_getbulk(ip, community, oid, count=25, port=161):
     # 使用 bulk_cmd 执行 SNMP GETBULK 操作
     iterator = bulk_cmd(

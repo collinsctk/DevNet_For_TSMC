@@ -62,7 +62,7 @@ async def snmpv3_set(ip, username, auth_key, priv_key, oid, value, auth_protocol
         print(f'{name.prettyPrint()} = {val.prettyPrint()}')  # 打印修改的结果
 
 
-# 获取接口的 OID
+# 获取特定接口 ---> 接口状态的OID
 def get_if_oid(ip, username, auth_key, priv_key, if_name):
     if_result = asyncio.run(snmpv3_getbulk(ip, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.2", count=25, port=161))
     # print(if_result)
@@ -74,6 +74,7 @@ def get_if_oid(ip, username, auth_key, priv_key, if_name):
     return if_oid_final
 
 
+# 根据名称 up/down 接口
 # 1 为 up , 2 为 down
 def shutdown_if(ip, username, auth_key, priv_key, if_name, op=1):
     no_shutdown_oid = get_if_oid(ip, username, auth_key, priv_key, if_name)
@@ -92,7 +93,7 @@ if __name__ == "__main__":
 
     # shutdown G2 接口
     # 1 为 up , 2 为 down
-    asyncio.run(snmpv3_set(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
+    # asyncio.run(snmpv3_set(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
 
     # 根据名称 up/down 接口
     shutdown_if(ip_address, username, auth_key, priv_key, "GigabitEthernet2", op=1)

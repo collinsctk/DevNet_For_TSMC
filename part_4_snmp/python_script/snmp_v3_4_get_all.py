@@ -15,6 +15,7 @@ from snmp_v3_3_getbulk import snmpv3_getbulk
 # pysnmp==7.1.16   # ~~~更新时间2025/2/23
 
 
+# SNMP v3 获取信息汇总
 def snmpv3_get_all(ip_address, username, auth_key, priv_key):
     # 主机名
     sys_name = asyncio.run(snmpv3_get(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.1.5.0", port=161))[1]

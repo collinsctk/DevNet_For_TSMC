@@ -15,6 +15,7 @@ import asyncio
 # pysnmp==7.1.16   # ~~~更新时间2025/2/23
 
 
+# SNMP v2 获取信息汇总
 def snmpv2_get_all(ip_address, community):
     # 主机名
     sys_name = asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.2.1.1.5.0", port=161))[1]

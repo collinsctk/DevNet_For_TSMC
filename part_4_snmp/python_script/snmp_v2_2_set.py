@@ -15,6 +15,7 @@ from pysnmp.hlapi.v3arch.asyncio import *
 from snmp_v2_3_getbulk import snmpv2_getbulk
 
 
+# SNMP Set 操作
 async def snmpv2_set(ip, community, oid, value, port=161):
     # 根据值的类型，选择相应的 SNMP 类型
     if isinstance(value, str):
@@ -45,17 +46,22 @@ async def snmpv2_set(ip, community, oid, value, port=161):
         print(f'{name.prettyPrint()} = {val.prettyPrint()}')  # 打印修改的结果
 
 
+# 获取特定接口 ---> 接口状态的OID
 def get_if_oid(ip, community, if_name):
     if_result = asyncio.run(snmpv2_getbulk(ip, community, "1.3.6.1.2.1.2.2.1.2", count=25, port=161))
     # print(if_result)
     if_result_dict = {}
     for x, y in if_result:
         if_result_dict.update({y: x})
+    # 找到特定接口的OID
     if_oid = if_result_dict.get(if_name)
+    # 替换前缀, 替换为接口状态的OID
     if_oid_final = if_oid.replace('1.3.6.1.2.1.2.2.1.2', '1.3.6.1.2.1.2.2.1.7')
+    # 返回接口状态的OID
     return if_oid_final
 
 
+# 根据名称 up/down 接口
 # 1 为 up , 2 为 down
 def shutdown_if(ip, community, if_name, op=1):
     no_shutdown_oid = get_if_oid(ip, community, if_name)
@@ -70,6 +76,6 @@ if __name__ == "__main__":
     asyncio.run(snmpv2_set(ip_address, write_community, "1.3.6.1.2.1.1.5.0", "C8kv1", port=161))
     # shutdown G2
     # 1 为 up , 2 为 down
-    asyncio.run(snmpv2_set(ip_address, write_community, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
+    # asyncio.run(snmpv2_set(ip_address, write_community, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
     # 根据名称 up/down 接口
     shutdown_if(ip_address, write_community, "GigabitEthernet2", op=1)
