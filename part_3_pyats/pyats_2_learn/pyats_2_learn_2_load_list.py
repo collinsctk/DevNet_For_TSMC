@@ -29,6 +29,8 @@ for device in devices_list:
 
 testbed_device_details = {"devices": device_details}
 
+# pprint(testbed_device_details)
+
 testbed = load({"devices": device_details})
 
 # print(testbed.devices)
@@ -42,11 +44,26 @@ device.connect(learn_hostname=True,
 
 # # 执行普通命令
 # print(device.execute('show version'))
+"""
+{'devices': {'C8Kv1': {'connections': {'cli': {'ip': '196.21.5.211',
+                                               'protocol': 'ssh'}},
+                       'credentials': {'default': {'password': 'Cisc0123',
+                                                   'username': 'admin'}},
+                       'os': 'iosxe',
+                       'type': 'iosxe'},
+             'C8Kv2': {'connections': {'cli': {'ip': '196.21.5.212',
+                                               'protocol': 'ssh'}},
+                       'credentials': {'default': {'password': 'Cisc0123',
+                                                   'username': 'admin'}},
+                       'os': 'iosxe',
+                       'type': 'iosxe'}}}
+"""
 
-# # 分析命令输出结果
-# pprint(device.parse('show version'))
+if __name__ == '__main__':
+    # 分析命令输出结果
+    pprint(device.parse('show version'))
 
-# 详细learn清单
-# https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/models
-# pprint(device.learn('ospf').to_dict())
+    # 详细learn清单
+    # https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/models
+    pprint(device.learn('ospf').to_dict())
 

@@ -4,6 +4,7 @@ import json
 
 from part_3_pyats.pyats_2_learn.pyats_2_learn_2_load_list import testbed
 
+# ~~~~~~~~~~~~~~~~~~注意是C8Kv2~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 device = testbed.devices['C8Kv2']
 
 device.connect(learn_hostname=True,
@@ -28,6 +29,7 @@ now_show_ip_route_ospf = json.loads(json.dumps(device.parse('show ip route ospf'
 # pprint(now_show_ip_route_ospf)
 
 
+# ~~~~~~~~~~~~~~~~~~注意是C8Kv2~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 使用DeepDiff比较两个字典，排除包含 'updated' 的字段
 diff = DeepDiff(original_show_ip_route_ospf,
                 now_show_ip_route_ospf,

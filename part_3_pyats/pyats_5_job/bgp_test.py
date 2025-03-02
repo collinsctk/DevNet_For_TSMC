@@ -18,6 +18,7 @@ class CommonSetup(aetest.CommonSetup):
     @aetest.subsection
     def connect(self, testbed):
         """连接到所有设备"""
+        # 加载testbed
         testbed = tbload(testbed)
 
         # 保存testbed对象到测试实例
@@ -48,6 +49,7 @@ class BGPNeighborsEstablished(aetest.Testcase):
         self.parsed_outputs = {}
         self.device_map = {}
 
+        # 逐个设备执行"show ip bgp summary", 并解析, 保存到self.parsed_outputs中
         for device in testbed:
             self.device_map[device.name] = device
             try:
@@ -62,6 +64,7 @@ class BGPNeighborsEstablished(aetest.Testcase):
         """检查BGP邻居状态"""
         failed_dict = {}
 
+        # 遍历每个设备, 分析每一个设备的"show ip bgp summary"分析结果
         for device_name, output in self.parsed_outputs.items():
             log.info(f"检查设备 {device_name} 的BGP邻居状态")
             failed_neighbors = {}
@@ -102,12 +105,14 @@ class BGPNeighborsEstablished(aetest.Testcase):
                     log.error(f"设备 {device_name} 没有建立BGP邻居！")
                     continue
 
+                # 提取邻居,与邻居的详细信息
                 for neighbor, details in output.get('vrf').get('default').get('neighbor').items():
                     # 转换为字符串以便于检查
                     state = str(details.get('address_family').get('').get('state_pfxrcd', ''))
-                    # 如果状态是数字或特定状态，表示BGP会话已建立
+                    # 确认状态是数字, 数字表示正常,并且收到的前缀数量!
                     if state.isdigit() and int(state) >= 1:
                         log.info(f"设备 {device_name} 上的邻居 {neighbor} 状态正常! 接收到{state}个前缀")
+                    # 如果部署数字, 表示邻居不正常, 并且处于一种未建立的状态!
                     else:
                         log.error(f"设备 {device_name} 上的邻居 {neighbor} 状态为 {state}")
                         failed_neighbors[neighbor] = state
@@ -115,6 +120,7 @@ class BGPNeighborsEstablished(aetest.Testcase):
             except Exception as e:
                 log.error(f"检查设备 {device_name} 的BGP邻居时出错: {e}")
 
+            # 写入失败邻居的字典
             if failed_neighbors:
                 failed_dict[device_name] = failed_neighbors
 
@@ -132,17 +138,18 @@ class BGPNeighborsEstablished(aetest.Testcase):
 
 class BGPRouteCheck(aetest.Testcase):
     """BGP邻居建立状态测试"""
-
     @aetest.setup
     def setup(self):
         """从测试设备中获取并保存BGP详细信息"""
         log.info("正在加载testbed对象")
+        # 读取testbed对象
         testbed = self.parent.parameters['testbed']
 
         # 创建存储解析结果的字典，同时保存设备名称和设备对象的映射
         self.parsed_outputs = {}
         self.device_map = {}
 
+        # 逐个设备执行"show ip bgp summary", 并解析, 保存到self.parsed_outputs中
         for device in testbed:
             self.device_map[device.name] = device
             try:
@@ -157,15 +164,20 @@ class BGPRouteCheck(aetest.Testcase):
         """检查BGP路由"""
         failed_dict = {}
 
+        # 遍历每个设备, device_name是设备名称
         for device_name in self.parsed_outputs.keys():
             log.info(f"检查设备 {device_name} 的BGP路由")
-
+            # 提取设备对象
             device = self.device_map[device_name]
+            # 读取设备预期通过bgp学习到的路由
             with open(f"expected_network.yaml", 'r') as f:
                 all_expected_network = yaml.safe_load(f.read())
+            # 提取设备预期通过bgp学习到的路由
             expected_network_list = all_expected_network.get(device_name)
             try:
+                # 当前设备的bgp路由
                 routes = device.parse('show ip route bgp').get('vrf').get('default').get('address_family').get('ipv4').get('routes')
+                # ~~~~~具体格式如下~~~~~
                 """
                 {'vrf': {'default': {'address_family': {'ipv4': {'routes': {'192.168.1.0/24': {'active': True,
                                                                                'metric': 0,
@@ -186,6 +198,7 @@ class BGPRouteCheck(aetest.Testcase):
                                                                            'source_protocol': 'bgp',
                                                                            'source_protocol_codes': 'B'}}}}}}}
                 """
+                # 遍历预期路由列表，确认预期路由是否在当前设备的路由中
                 for expected_network in expected_network_list:
                     if expected_network in routes.keys():
                         log.info(f"设备 {device_name} 包含预期的BGP路由 {expected_network}")
@@ -207,7 +220,6 @@ class BGPRouteCheck(aetest.Testcase):
 
 class CommonCleanup(aetest.CommonCleanup):
     """公共清理部分"""
-
     @aetest.subsection
     def disconnect(self, testbed):
         """断开所有设备连接"""

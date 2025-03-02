@@ -42,7 +42,7 @@ def netmiko_show_cred(ospf_router):
             for n in nei_list:
                 nei_dict[n['neighbor_id']] = n['state']
 
-        return nei_dict  # {"2.2.2.2": "FULL/DR"}
+        return nei_dict  # 具体格式: {"2.2.2.2": "FULL/DR"}
     except Exception as e:
         print(e)
         return None
@@ -53,8 +53,11 @@ def test_ospf_neigh_1():
     test_nei_router_id = test_ospf_neigh_id_2
     test_ospf_router_ip = test_ospf_router_1
     ospf_neigh = netmiko_show_cred(test_ospf_router_ip)
+    # ~~~~测试1: 确认存在OSPF邻居~~~~
     assert ospf_neigh is not None, f"获取{test_ospf_router_ip}OSPF邻居信息失败"
+    # ~~~~测试2: 期望的邻居存在于当前的邻居清单中~~~~
     assert test_nei_router_id in ospf_neigh, f"检查的OSPF邻居{test_nei_router_id}不在{test_ospf_router_ip}的邻居列表中"
+    # ~~~~测试3: 期望的邻居状态是FULL~~~~
     assert 'FULL' in ospf_neigh[test_nei_router_id], f"{test_ospf_router_ip}的邻居{test_nei_router_id}状态不是FULL"
 
 
@@ -63,8 +66,11 @@ def test_ospf_neigh_2():
     test_nei_router_id = test_ospf_neigh_id_1
     test_ospf_router_ip = test_ospf_router_2
     ospf_neigh = netmiko_show_cred(test_ospf_router_ip)
+    # ~~~~测试1: 确认存在OSPF邻居~~~~
     assert ospf_neigh is not None, f"获取{test_ospf_router_ip}OSPF邻居信息失败"
+    # ~~~~测试2: 期望的邻居存在于当前的邻居清单中~~~~
     assert test_nei_router_id in ospf_neigh, f"检查的OSPF邻居{test_nei_router_id}不在{test_ospf_router_ip}的邻居列表中"
+    # ~~~~测试3: 期望的邻居状态是FULL~~~~
     assert 'FULL' in ospf_neigh[test_nei_router_id], f"{test_ospf_router_ip}的邻居{test_nei_router_id}状态不是FULL"
 
 

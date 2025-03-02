@@ -21,10 +21,10 @@ device.connect(learn_hostname=True,
                ssh_options='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null')
 
 # # 执行普通命令
-# print(device.execute('show version'))
+print(device.execute('show version'))
 
 # # 分析命令输出结果
-# pprint(device.parse('show version'))
+pprint(device.parse('show version'))
 
 # 详细learn清单
 # https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/models
