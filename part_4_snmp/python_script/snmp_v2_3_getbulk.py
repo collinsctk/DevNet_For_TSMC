@@ -12,6 +12,7 @@
 
 import asyncio
 from pysnmp.hlapi.v3arch.asyncio import *
+from pprint import pprint
 
 
 # SNMP GETBULK 操作
@@ -54,29 +55,36 @@ if __name__ == "__main__":
     # 获取接口名称
     raw_name_list = asyncio.run(snmpv2_getbulk(ip_address, community, "1.3.6.1.2.1.2.2.1.2", port=161))
     if_name_list = [raw_if_name[1] for raw_if_name in raw_name_list]
-
+    # print(if_name_list)
     # 获取接口速率
     raw_speed_list = asyncio.run(snmpv2_getbulk(ip_address, community, "1.3.6.1.2.1.2.2.1.5", port=161))
     if_speed_list = [raw_speed[1] for raw_speed in raw_speed_list]
-
+    # print(if_speed_list)
+    # 获取接口管理状态
+    raw_status_list = asyncio.run(snmpv2_getbulk(ip_address, community, "1.3.6.1.2.1.2.2.1.7", port=161))
+    if_status_list = [raw_status[1] for raw_status in raw_status_list]
+    # print(if_status_list)
     # 获取进接口字节数
     raw_in_bytes_list = asyncio.run(snmpv2_getbulk(ip_address, community, "1.3.6.1.2.1.2.2.1.10", port=161))
     if_in_bytes_list = [raw_in_bytes[1] for raw_in_bytes in raw_in_bytes_list]
-
+    # print(if_in_bytes_list)
     # 获取出接口字节数
     raw_out_bytes_list = asyncio.run(snmpv2_getbulk(ip_address, community, "1.3.6.1.2.1.2.2.1.16", port=161))
     if_out_bytes_list = [raw_out_bytes[1] for raw_out_bytes in raw_out_bytes_list]
+    # print(if_out_bytes_list)
 
-    # 汇总接口信息
     interface_list = []
-    for name, speed, in_bytes, out_bytes in zip(if_name_list, if_speed_list, if_in_bytes_list, if_out_bytes_list):
+
+    for name, speed, status, in_bytes, out_bytes in zip(if_name_list, if_speed_list, if_status_list, if_in_bytes_list, if_out_bytes_list):
+        if not int(in_bytes) and not int(out_bytes):
+            continue
         interface_list.append({
             'interface_name': name,
             'interface_speed': speed,
-            'in_bytes': in_bytes,
-            'out_bytes': out_bytes
+            'interface_status': True if '1' else False,
+            'in_bytes': int(in_bytes),
+            'out_bytes': int(out_bytes)
         })
 
-    # 打印接口信息
-    from pprint import pprint
     pprint(interface_list)
+
