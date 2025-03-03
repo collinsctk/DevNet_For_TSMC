@@ -154,7 +154,7 @@ class BGPRouteCheck(aetest.Testcase):
             self.device_map[device.name] = device
             try:
                 log.info(f"从设备 {device.name} 解析BGP信息")
-                self.parsed_outputs[device.name] = device.parse("show ip bgp summary")
+                self.parsed_outputs[device.name] = device.parse("show ip route bgp")
             except Exception as e:
                 log.error(f"从设备 {device.name} 解析BGP信息时出错: {e}")
                 self.parsed_outputs[device.name] = {}
@@ -163,12 +163,9 @@ class BGPRouteCheck(aetest.Testcase):
     def test_bgp_routes(self):
         """检查BGP路由"""
         failed_dict = {}
-
-        # 遍历每个设备, device_name是设备名称
-        for device_name in self.parsed_outputs.keys():
+        for device_name, output in self.parsed_outputs.items():
+            # 遍历每个设备, device_name是设备名称, output是"show ip route bgp"输出的解析结果
             log.info(f"检查设备 {device_name} 的BGP路由")
-            # 提取设备对象
-            device = self.device_map[device_name]
             # 读取设备预期通过bgp学习到的路由
             with open(f"expected_network.yaml", 'r') as f:
                 all_expected_network = yaml.safe_load(f.read())
@@ -176,7 +173,7 @@ class BGPRouteCheck(aetest.Testcase):
             expected_network_list = all_expected_network.get(device_name)
             try:
                 # 当前设备的bgp路由
-                routes = device.parse('show ip route bgp').get('vrf').get('default').get('address_family').get('ipv4').get('routes')
+                routes = output.get('vrf').get('default').get('address_family').get('ipv4').get('routes')
                 # ~~~~~具体格式如下~~~~~
                 """
                 {'vrf': {'default': {'address_family': {'ipv4': {'routes': {'192.168.1.0/24': {'active': True,
