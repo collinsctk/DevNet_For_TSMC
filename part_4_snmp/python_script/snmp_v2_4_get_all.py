@@ -53,6 +53,11 @@ def snmpv2_get_all(ip_address, community):
     if_speed_list = [raw_speed[1] for raw_speed in raw_speed_list]
     # print(if_speed_list)
 
+    # 获取接口管理状态
+    raw_status_list = asyncio.run(snmpv2_getbulk(ip_address, community, "1.3.6.1.2.1.2.2.1.7", port=161))
+    if_status_list = [raw_status[1] for raw_status in raw_status_list]
+    # print(if_status_list)
+
     # 进接口字节数
     raw_in_bytes_list = asyncio.run(snmpv2_getbulk(ip_address, community, "1.3.6.1.2.1.2.2.1.10", port=161))
     if_in_bytes_list = [raw_in_bytes[1] for raw_in_bytes in raw_in_bytes_list]
@@ -64,13 +69,15 @@ def snmpv2_get_all(ip_address, community):
     # print(if_out_bytes_list)
 
     interface_list = []
-    for name, speed, in_bytes, out_bytes in zip(if_name_list, if_speed_list, if_in_bytes_list, if_out_bytes_list):
-        interface_list.append({
-            'interface_name': name,
-            'interface_speed': speed,
-            'in_bytes': in_bytes,
-            'out_bytes': out_bytes
-        })
+    for name, speed, status, in_bytes, out_bytes in zip(if_name_list, if_speed_list, if_status_list, if_in_bytes_list, if_out_bytes_list):
+        if int(in_bytes) and int(out_bytes):
+            interface_list.append({
+                'interface_name': name,
+                'interface_speed': int(speed),
+                'interface_status': True if status == '1' else False,
+                'in_bytes': int(in_bytes),
+                'out_bytes': int(out_bytes)
+            })
 
     return {'device_ip': ip_address,
             'hostname': sys_name,
