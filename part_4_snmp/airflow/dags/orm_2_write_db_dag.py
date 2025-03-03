@@ -21,7 +21,7 @@ default_args = {
 }
 
 with DAG(
-    'run_get_netbox_device_type_info_dag',  # DAG的名称
+    'get_snmp_info_writedb_dag',  # DAG的名称
     default_args=default_args,
     schedule_interval=timedelta(seconds=30),  # 设置为每 30 秒调度一次
     # ~~~~~~~~~~~~~~~ crontabs ~~~~~~~
