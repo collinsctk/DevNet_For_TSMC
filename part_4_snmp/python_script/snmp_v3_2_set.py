@@ -89,11 +89,11 @@ if __name__ == "__main__":
     priv_key = 'Cisc0123'
 
     # 设置主机名
-    asyncio.run(snmpv3_set(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.1.5.0", "C8kv1", port=161))
+    asyncio.run(snmpv3_set(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.1.5.0", "C8Kv1", port=161))
 
     # shutdown G2 接口
     # 1 为 up , 2 为 down
-    # asyncio.run(snmpv3_set(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
+    asyncio.run(snmpv3_set(ip_address, username, auth_key, priv_key, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
 
     # 根据名称 up/down 接口
     shutdown_if(ip_address, username, auth_key, priv_key, "GigabitEthernet2", op=1)

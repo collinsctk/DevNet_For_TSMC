@@ -75,22 +75,22 @@ if __name__ == "__main__":
     ip_address = "196.21.5.211"
     username = "qytanguser"
     qytang_auth_key = 'Cisc0123'
-    qytang_priv_protocol = 'Cisc0123'
+    qytang_priv_key = 'Cisc0123'
 
     # 系统描述
-    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_protocol, "1.3.6.1.2.1.1.1.0")))
+    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_key, "1.3.6.1.2.1.1.1.0")))
     # 联系人
-    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_protocol, "1.3.6.1.2.1.1.4.0")))
+    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_key, "1.3.6.1.2.1.1.4.0")))
     # # 主机名
-    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_protocol, "1.3.6.1.2.1.1.5.0")))
+    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_key, "1.3.6.1.2.1.1.5.0")))
     # 地点
-    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_protocol, "1.3.6.1.2.1.1.6.0")))
+    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_key, "1.3.6.1.2.1.1.6.0")))
     # cpmCPUTotal5sec
-    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_protocol,
+    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_key,
                                  "1.3.6.1.4.1.9.9.109.1.1.1.1.6.7")))
     # cpmCPUMemoryUsed
-    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_protocol,
+    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_key,
                                  "1.3.6.1.4.1.9.9.109.1.1.1.1.12.7")))
     # cpmCPUMemoryFree
-    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_protocol,
+    print(asyncio.run(snmpv3_get(ip_address, username, qytang_auth_key, qytang_priv_key,
                                  "1.3.6.1.4.1.9.9.109.1.1.1.1.13.7")))

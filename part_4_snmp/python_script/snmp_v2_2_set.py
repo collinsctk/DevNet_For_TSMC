@@ -73,9 +73,9 @@ if __name__ == "__main__":
     ip_address = "196.21.5.211"
     write_community = "qytangrw"
     # 设置主机名
-    asyncio.run(snmpv2_set(ip_address, write_community, "1.3.6.1.2.1.1.5.0", "C8kv1", port=161))
+    asyncio.run(snmpv2_set(ip_address, write_community, "1.3.6.1.2.1.1.5.0", "C8Kv1", port=161))
     # shutdown G2
     # 1 为 up , 2 为 down
-    # asyncio.run(snmpv2_set(ip_address, write_community, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
+    asyncio.run(snmpv2_set(ip_address, write_community, "1.3.6.1.2.1.2.2.1.7.2", 1, port=161))
     # 根据名称 up/down 接口
     shutdown_if(ip_address, write_community, "GigabitEthernet2", op=1)
